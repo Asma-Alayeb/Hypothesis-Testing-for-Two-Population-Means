@@ -101,17 +101,20 @@
         var standardError = Math.sqrt((Math.pow(stddev1, 2) / n1) + (Math.pow(stddev2, 2) / n2));
         var testStatistic = (mean1 - mean2) / standardError;
 
+        // Use the smaller sample size to compute the degrees of freedom
+        var df = Math.min(n1, n2) - 1;
+
         var criticalValueLower, criticalValueUpper, pValue;
         if (testType === "left") {
-            criticalValueLower = jStat.studentt.inv(alpha, n1 + n2 - 2);
-            pValue = jStat.studentt.cdf(testStatistic, n1 + n2 - 2);
+            criticalValueLower = jStat.studentt.inv(alpha, df);
+            pValue = jStat.studentt.cdf(testStatistic, df);
         } else if (testType === "right") {
-            criticalValueUpper = jStat.studentt.inv(1 - alpha, n1 + n2 - 2);
-            pValue = 1 - jStat.studentt.cdf(testStatistic, n1 + n2 - 2);
+            criticalValueUpper = jStat.studentt.inv(1 - alpha, df);
+            pValue = 1 - jStat.studentt.cdf(testStatistic, df);
         } else {
-            criticalValueLower = jStat.studentt.inv(alpha / 2, n1 + n2 - 2);
-            criticalValueUpper = jStat.studentt.inv(1 - alpha / 2, n1 + n2 - 2);
-            pValue = 2 * (1 - jStat.studentt.cdf(Math.abs(testStatistic), n1 + n2 - 2));
+            criticalValueLower = jStat.studentt.inv(alpha / 2, df);
+            criticalValueUpper = jStat.studentt.inv(1 - alpha / 2, df);
+            pValue = 2 * (1 - jStat.studentt.cdf(Math.abs(testStatistic), df));
         }
 
         document.getElementById("test_statistic_result").innerHTML = "Test Statistic: " + testStatistic.toFixed(5);
