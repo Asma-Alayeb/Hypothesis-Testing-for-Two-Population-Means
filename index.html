@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistical Calculators</title>
+    <title>Two Population Means Hypothesis Test</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,24 +12,10 @@
             padding: 0;
         }
         header {
-            background-color: #333;
+            background-color: #4b0082; /* Dark Purple */
             color: #fff;
             padding: 10px 0;
             text-align: center;
-        }
-        nav {
-            background-color: #444;
-            padding: 10px;
-            text-align: center;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
-        nav a:hover {
-            text-decoration: underline;
         }
         section {
             padding: 20px;
@@ -42,173 +28,99 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 800px;
         }
+        button {
+            background-color: #9932CC; /* Dark Orchid */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ba55d3; /* Medium Orchid */
+        }
+        p {
+            color: #4b0082; /* Dark Purple */
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Statistical Calculators</h1>
+    <h1>Two Population Means Hypothesis Test</h1>
 </header>
 
-<nav>
-    <a href="#twoProportionTest">Two Population Proportions Test</a>
-    <a href="#confidenceInterval">Confidence Interval Calculator</a>
-    <a href="#sampleSizeCalculator">Sample Size Calculator</a>
-</nav>
-
-<section id="twoProportionTest" class="calculator">
-    <h2>Two Population Proportions Hypothesis Test</h2>
-    <!-- Add your Two Population Proportions Hypothesis Test code here -->
-    <form id="twoProportionForm">
-        <p>Number of Successes in Sample 1 (x1): <input type="text" id="x1"></p>
+<section class="calculator">
+    <h2>Enter Your Data</h2>
+    <form id="meanTestForm">
+        <p>Sample Mean 1 (x̄1): <input type="text" id="mean1" required></p>
+        <p>Sample Standard Deviation 1 (s1): <input type="text" id="stddev1" required></p>
         <p>Sample Size 1 (n1): <input type="text" id="n1" required></p>
-        <p>Sample Proportion 1 (p1): <input type="text" id="p1"></p>
-        <p>Number of Successes in Sample 2 (x2): <input type="text" id="x2"></p>
+
+        <p>Sample Mean 2 (x̄2): <input type="text" id="mean2" required></p>
+        <p>Sample Standard Deviation 2 (s2): <input type="text" id="stddev2" required></p>
         <p>Sample Size 2 (n2): <input type="text" id="n2" required></p>
-        <p>Sample Proportion 2 (p2): <input type="text" id="p2"></p>
+
         <p>Significance Level (α): <input type="text" id="alpha" required></p>
         <p>Test Type: 
-            <select id="test_type" required>
+            <select id="testType" required>
                 <option value="left">Left Tail Test</option>
                 <option value="right">Right Tail Test</option>
                 <option value="two">Two Tail Test</option>
             </select>
         </p>
-        <p><button type="button" onclick="performTwoProportionTest()">Perform Hypothesis Test</button></p>
+
+        <p><button type="button" onclick="performMeanTest()">Perform Hypothesis Test</button></p>
     </form>
 
-    <p id="pooled_estimate_result"></p>
     <p id="test_statistic_result"></p>
     <p id="critical_values_result"></p>
     <p id="p_value_result"></p>
-    <p id="decision_result"></p>
-</section>
-
-<section id="confidenceInterval" class="calculator">
-    <h2>Confidence Interval and Margin of Error</h2>
-    <!-- Add your Confidence Interval and Margin of Error code here -->
-    <form id="confidenceIntervalForm">
-        <p>Confidence Level (%): <input type="text" id="confidence_level" required></p>
-        <p><button type="button" onclick="calculateConfidenceInterval()">Calculate Confidence Interval</button></p>
-    </form>
-
-    <p id="confidence_interval_result"></p>
-    <p id="margin_error_result"></p>
-</section>
-
-<section id="sampleSizeCalculator" class="calculator">
-    <h2>Sample Size Calculator</h2>
-    <!-- Add your Sample Size Calculator code here -->
-    <form id="sampleSizeForm">
-        <p>Sample Proportion 1 (p1): <input type="text" id="ss_p1" required></p>
-        <p>Sample Proportion 2 (p2): <input type="text" id="ss_p2" required></p>
-        <p>Confidence Level (%): <input type="text" id="ss_confidence_level" required></p>
-        <p>Margin of Error: <input type="text" id="ss_margin_error" required></p>
-        <p><button type="button" onclick="calculateSampleSize()">Calculate Sample Size</button></p>
-    </form>
-
-    <p id="sample_size_result"></p>
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
 <script>
-    // Place your existing JavaScript code here
-
-    // Hypothesis Test Function
-    function performTwoProportionTest() {
-        var x1 = document.getElementById("x1").value ? parseInt(document.getElementById("x1").value) : null;
+    function performMeanTest() {
+        var mean1 = parseFloat(document.getElementById("mean1").value);
+        var stddev1 = parseFloat(document.getElementById("stddev1").value);
         var n1 = parseInt(document.getElementById("n1").value);
-        var p1 = document.getElementById("p1").value ? parseFloat(document.getElementById("p1").value) : null;
 
-        var x2 = document.getElementById("x2").value ? parseInt(document.getElementById("x2").value) : null;
+        var mean2 = parseFloat(document.getElementById("mean2").value);
+        var stddev2 = parseFloat(document.getElementById("stddev2").value);
         var n2 = parseInt(document.getElementById("n2").value);
-        var p2 = document.getElementById("p2").value ? parseFloat(document.getElementById("p2").value) : null;
 
         var alpha = parseFloat(document.getElementById("alpha").value);
-        var testType = document.getElementById("test_type").value;
+        var testType = document.getElementById("testType").value;
 
-        if (isNaN(n1) || isNaN(n2) || isNaN(alpha) || n1 <= 0 || n2 <= 0) {
-            alert("Please ensure all required inputs are valid numbers.");
-            return;
-        }
-
-        if (!x1 && !p1) {
-            alert("Please provide either the number of successes (x1) or the sample proportion (p1) for Sample 1.");
-            return;
-        }
-
-        if (!x2 && !p2) {
-            alert("Please provide either the number of successes (x2) or the sample proportion (p2) for Sample 2.");
-            return;
-        }
-
-        if (x1 !== null) {
-            p1 = x1 / n1;
-        }
-        if (x2 !== null) {
-            p2 = x2 / n2;
-        }
-
-        var p_combined = (p1 * n1 + p2 * n2) / (n1 + n2);
-
-        var standardError = Math.sqrt(p_combined * (1 - p_combined) * (1/n1 + 1/n2));
-        var testStatistic = (p1 - p2) / standardError;
-
-        var criticalValueLower, criticalValueUpper, pValue;
-        if (testType === "left") {
-            criticalValueLower = jStat.normal.inv(alpha, 0, 1);
-            pValue = jStat.normal.cdf(testStatistic, 0, 1);
-        } else if (testType === "right") {
-            criticalValueUpper = jStat.normal.inv(1 - alpha, 0, 1);
-            pValue = 1 - jStat.normal.cdf(testStatistic, 0, 1);
-        } else {
-            criticalValueLower = jStat.normal.inv(alpha / 2, 0, 1);
-            criticalValueUpper = jStat.normal.inv(1 - alpha / 2, 0, 1);
-            pValue = 2 * (testStatistic < 0 ? jStat.normal.cdf(testStatistic, 0, 1) : 1 - jStat.normal.cdf(testStatistic, 0, 1));
-        }
-
-        var decision;
-        if (testType === "left") {
-            decision = testStatistic < criticalValueLower ? "Reject the null hypothesis." : "Fail to reject the null hypothesis.";
-        } else if (testType === "right") {
-            decision = testStatistic > criticalValueUpper ? "Reject the null hypothesis." : "Fail to reject the null hypothesis.";
-        } else {
-            decision = (testStatistic < criticalValueLower || testStatistic > criticalValueUpper) ? "Reject the null hypothesis." : "Fail to reject the null hypothesis.";
-        }
-
-        document.getElementById("pooled_estimate_result").innerHTML = "Pooled Estimate (p̂): " + p_combined;
-        document.getElementById("test_statistic_result").innerHTML = "Test Statistic (z): " + testStatistic;
-        if (testType === "two") {
-            document.getElementById("critical_values_result").innerHTML = "Critical Values: [" + criticalValueLower + ", " + criticalValueUpper + "]";
-        } else {
-            document.getElementById("critical_values_result").innerHTML = "Critical Value: " + (testType === "left" ? criticalValueLower : criticalValueUpper);
-        }
-        document.getElementById("p_value_result").innerHTML = "P-Value: " + pValue;
-        document.getElementById("decision_result").innerHTML = "Decision: " + decision;
-    }
-
-    // Confidence Interval Function
-    function calculateConfidenceInterval() {
-        // Implementation here
-    }
-
-    // Sample Size Calculator
-    function calculateSampleSize() {
-        var ss_p1 = parseFloat(document.getElementById("ss_p1").value);
-        var ss_p2 = parseFloat(document.getElementById("ss_p2").value);
-        var ss_confidence_level = parseFloat(document.getElementById("ss_confidence_level").value) / 100;
-        var ss_margin_error = parseFloat(document.getElementById("ss_margin_error").value);
-
-        if (isNaN(ss_p1) || isNaN(ss_p2) || isNaN(ss_confidence_level) || isNaN(ss_margin_error) ||
-            ss_confidence_level <= 0 || ss_confidence_level >= 1 || ss_margin_error <= 0) {
+        if (isNaN(mean1) || isNaN(stddev1) || isNaN(n1) || isNaN(mean2) || isNaN(stddev2) || isNaN(n2) || isNaN(alpha)) {
             alert("Please ensure all inputs are valid numbers.");
             return;
         }
 
-        var zScore = jStat.normal.inv(1 - (1 - ss_confidence_level) / 2, 0, 1);
-        var sampleSize = Math.ceil((ss_p1 * (1 - ss_p1) + ss_p2 * (1 - ss_p2)) * Math.pow(zScore / ss_margin_error, 2));
+        // Calculate the test statistic
+        var standardError = Math.sqrt((Math.pow(stddev1, 2) / n1) + (Math.pow(stddev2, 2) / n2));
+        var testStatistic = (mean1 - mean2) / standardError;
 
-        document.getElementById("sample_size_result").innerHTML = "Required Sample Size: " + sampleSize;
+        var criticalValueLower, criticalValueUpper, pValue;
+        if (testType === "left") {
+            criticalValueLower = jStat.studentt.inv(alpha, n1 + n2 - 2);
+            pValue = jStat.studentt.cdf(testStatistic, n1 + n2 - 2);
+        } else if (testType === "right") {
+            criticalValueUpper = jStat.studentt.inv(1 - alpha, n1 + n2 - 2);
+            pValue = 1 - jStat.studentt.cdf(testStatistic, n1 + n2 - 2);
+        } else {
+            criticalValueLower = jStat.studentt.inv(alpha / 2, n1 + n2 - 2);
+            criticalValueUpper = jStat.studentt.inv(1 - alpha / 2, n1 + n2 - 2);
+            pValue = 2 * (1 - jStat.studentt.cdf(Math.abs(testStatistic), n1 + n2 - 2));
+        }
+
+        document.getElementById("test_statistic_result").innerHTML = "Test Statistic: " + testStatistic.toFixed(5);
+        if (testType === "two") {
+            document.getElementById("critical_values_result").innerHTML = "Critical Values: [" + criticalValueLower.toFixed(5) + ", " + criticalValueUpper.toFixed(5) + "]";
+        } else {
+            document.getElementById("critical_values_result").innerHTML = "Critical Value: " + (testType === "left" ? criticalValueLower.toFixed(5) : criticalValueUpper.toFixed(5));
+        }
+        document.getElementById("p_value_result").innerHTML = "P-Value: " + pValue.toFixed(5);
     }
 </script>
 
