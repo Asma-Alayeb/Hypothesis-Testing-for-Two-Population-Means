@@ -145,7 +145,7 @@
         return;
     }
        ///I added this!!!!
-var pooledVar=(Math.pow(stddev1,2)/(n1-1)+Math.pow(stddev2,2)/(n2-1))/(n1+n2-2)
+var pooledVar=(Math.pow(stddev1,2)*(n1-1)+Math.pow(stddev2,2)*(n2-1))/(n1+n2-2)
         var pooledStdev=Math.sqrt(pooledVar)
         var pooledStdErr = Math.sqrt(Math.pow(pooledStdev, 2) / n1 + Math.pow(pooledStdev, 2) / n2);
         ///I added the above !!!!
